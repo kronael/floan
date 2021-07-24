@@ -1,20 +1,19 @@
+require("path");
 require("@nomiclabs/hardhat-waffle");
 require("dotenv").config();
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+// load tasks
+const normalizedPath = require("path").join(__dirname, "tasks");
+console.log("Paths are", normalizedPath);
+require("fs")
+  .readdirSync(normalizedPath)
+  .forEach(function (file) {
+    require("./tasks/" + file);
+  });
 
-  for (const account of accounts) {
-    console.log(account.address);
-  }
-});
-
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
-
+// load private data
 const infuraProjectId = process.env.INFURA_ID;
+const portal_ID = process.env.portal_ID;
 const mnemonic = process.env.DEV_MNEMONIC;
 const alchemyAPI = process.env.ALCHEMY_API;
 const etherscanAPI = process.env.ETHERSCAN_API;
@@ -22,8 +21,10 @@ const etherscanAPI = process.env.ETHERSCAN_API;
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+
+const DEFAULT_NETWORK = "hardhat";
 module.exports = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: DEFAULT_NETWORK,
   networks: {
     hardhat: {
       forking: {
@@ -41,7 +42,7 @@ module.exports = {
       accounts: { mnemonic: mnemonic },
     },
     kovan: {
-      url: `https://kovan.infura.io/v3/${infuraProjectId}`,
+      url: `https://poa-kovan.gateway.pokt.network/v1/lb/${portal_ID}`,
       accounts: { mnemonic: mnemonic },
     },
     goerli: {
