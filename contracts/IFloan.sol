@@ -8,8 +8,7 @@ interface IFloan {
     function requestLoan(
         uint256 principal,
         uint256 repayment,
-        uint256 duration,
-        uint256 validUntil
+        uint256 duration
     ) external;
 
     /// @notice Accept loan offer
