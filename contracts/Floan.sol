@@ -35,7 +35,7 @@ contract Floan is IFloan {
     }
 
     /********************* states *********************/
-    IERC20 token;
+    IERC20 immutable token;
     mapping(address => uint256) debtors;
     mapping(address => uint256) creditors;
     mapping(uint256 => FloanTypes.credit) credits;
@@ -57,6 +57,7 @@ contract Floan is IFloan {
         uint256 _duration,
         uint256 _validUntil
     ) external override {
+        require(_validUntil >= block.number, "Back in time call");
         // add credit to orderbook
         credits[loanNum] = FloanTypes.credit({
             requester: msg.sender,
@@ -149,5 +150,25 @@ contract Floan is IFloan {
     /********************* getter function *********************/
     function getTokenAddress() public view returns (address) {
         return address(token);
+    }
+
+    function getDebtID() public view returns (uint256) {
+        return debtors[msg.sender];
+    }
+
+    function getCreditID() public view returns (uint256) {
+        return creditors[msg.sender];
+    }
+
+    function getCredit(uint256 _loanId)
+        public
+        view
+        returns (FloanTypes.credit memory)
+    {
+        return credits[_loanId];
+    }
+
+    function getloanNum() public view returns (uint256) {
+        return loanNum;
     }
 }
