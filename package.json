@@ -1,9 +1,11 @@
 {
   "license": "MIT",
   "dependencies": {
+    "@nomiclabs/hardhat-web3": "^2.0.0",
     "@openzeppelin/contracts": "^4.2.0",
     "dotenv": "^10.0.0",
-    "hardhat": "^2.5.0"
+    "hardhat": "^2.5.0",
+    "web3": "^1.4.0"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
