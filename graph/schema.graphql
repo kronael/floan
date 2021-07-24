@@ -1,0 +1,49 @@
+type RequestLoan @entity {
+  id: ID!
+  loan: Loan!  
+}
+
+type RepayLoan @entity {
+  id: ID!
+  loan: Loan!
+}
+
+type MatchLoan @entity {
+  id: ID!
+  loan: Loan!
+}
+
+type WithdrawLoan @entity {
+  id: ID!
+  loan: Loan!
+}
+
+type PaybackLoan @entity {
+  id: ID!
+  loan: Loan!
+}
+
+type Loan @entity {
+  id: ID!
+  requester: Requester!
+  principal: BigInt!
+  repayment: BigInt!
+  duration: BigInt!
+  state: String!
+}
+
+type Requester @entity {
+  id: ID!
+  loans: [Loan!] @derivedFrom(field: "requester")
+}
+
+type Matcher @entity {
+  id: ID!
+  loansFunded: [LoanRequestMatch!] @derivedFrom(field: "matcher")
+}
+
+type LoanRequestMatch @entity {
+  id: ID!
+  request: RequestLoan!
+  matcher: Matcher!
+}
