@@ -17,13 +17,12 @@ contract Floan is IFloan, Ownable {
         uint256 indexed loanID,
         uint256 principal,
         uint256 repayment,
-        uint256 duration,
-        uint256 validUntil
+        uint256 duration
     );
     event LogProvideLoan(address indexed matcher, uint256 indexed loanID);
     event LogDrawLoan(address indexed requestor, uint256 indexed loanID);
     event LogPaybackLoan(address indexed requestor, uint256 indexed loanID);
-    event LogSlashDebtor(uint256 indexed loanID);
+    event LogSlashDebtor(address indexed requestor, uint256 indexed loanID);
 
     constructor(address _tokenAddress, address _pohAddress) {
         token = IERC20(_tokenAddress);
@@ -38,10 +37,7 @@ contract Floan is IFloan, Ownable {
 
     /********************* modifiers *********************/
 
-    function setNewToken(address _newTokenAddress, address _pohAddress)
-        public
-        onlyOwner()
-    {
+    function setNewToken(address _newTokenAddress) public onlyOwner() {
         token = IERC20(_newTokenAddress);
     }
 
@@ -60,11 +56,10 @@ contract Floan is IFloan, Ownable {
     function requestLoan(
         uint256 _principal,
         uint256 _repayment,
-        uint256 _duration,
-        uint256 _validUntil
+        uint256 _duration
     ) external override {
-        require(_validUntil >= block.number, "Back in time call");
-        require(proofOfHumanity.isRegistered(msg.sender), "Must be registered");
+        require(_duration > 0, "Back in time call");
+        //require(proofOfHumanity.isRegistered(msg.sender), "Must be registered");
         // add credit to orderbook
         credits[loanNum] = FloanTypes.credit({
             requester: msg.sender,
@@ -72,7 +67,7 @@ contract Floan is IFloan, Ownable {
             principal: _principal,
             repayment: _repayment,
             duration: uint48(_duration),
-            validUntil: uint48(_validUntil),
+            startBlock: 0,
             isFilled: false,
             isWithdrawn: false,
             isPayedBack: false,
@@ -84,8 +79,7 @@ contract Floan is IFloan, Ownable {
             loanNum,
             _principal,
             _repayment,
-            _duration,
-            _validUntil
+            _duration
         );
         // update credit information
         loanNum += 1;
@@ -111,6 +105,7 @@ contract Floan is IFloan, Ownable {
 
         SafeERC20.safeTransfer(token, msg.sender, userCredit.principal);
         credits[loanID].isWithdrawn = true;
+        credits[loanID].startBlock = uint48(block.number);
         emit LogDrawLoan(msg.sender, loanID);
     }
 
@@ -135,11 +130,12 @@ contract Floan is IFloan, Ownable {
     function slashDebtor(uint256 loanID) external override {
         require(credits[loanID].isPayedBack == false, "Is payed back");
         require(
-            uint256(credits[loanID].validUntil) <= block.number,
+            credits[loanID].startBlock + credits[loanID].duration <
+                uint48(block.number),
             "Period is not over"
         );
         console.log("You are a bad boy");
-        emit LogSlashDebtor(loanID);
+        emit LogSlashDebtor(credits[loanID].requester, loanID);
     }
 
     /********************* getter function *********************/

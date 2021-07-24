@@ -22,6 +22,7 @@ describe("Should set up contract", function() {
     const Floan = await ethers.getContractFactory("Floan");
     floan = await Floan.deploy(token.address, poh.address);
 
+    // fund forking account
     registeredUser = await impersonateAddress(
       "0xEd38f503Bbb3b2bb3469D6818B42e53fd28D1602"
     );
@@ -32,8 +33,6 @@ describe("Should set up contract", function() {
       token,
       "0x05E793cE0C6027323Ac150F6d45C2344d28B6019"
     );
-    //
-    // 0x1Db3439a222C519ab44bb1144fC28167b4Fa6EE6
   });
   it("Should give the correct token address to contract", async function() {
     expect(await floan.getTokenAddress()).to.be.equal(token.address);
@@ -50,22 +49,20 @@ describe("Should set up contract", function() {
     const principal = utils.parseEther("1");
     const repayment = utils.parseEther("1");
     const duration = utils.parseEther("1");
-    const validUntil = utils.parseEther("1");
 
     await floan
       .connect(registeredUser)
-      .requestLoan(principal, repayment, duration, validUntil);
+      .requestLoan(principal, repayment, duration);
   });
-  it("Should payback the loan", async function() {
+  it("Should provide the loan", async function() {
     // parameters
     const principal = utils.parseEther("1");
     const repayment = utils.parseEther("1");
     const duration = utils.parseEther("1");
-    const validUntil = utils.parseEther("1");
 
     await floan
       .connect(registeredUser)
-      .requestLoan(principal, repayment, duration, validUntil);
+      .requestLoan(principal, repayment, duration);
 
     await token
       .connect(registeredUser)
@@ -79,4 +76,23 @@ describe("Should set up contract", function() {
     console.log("userBalance is ", utils.formatEther(userBalance));
     await floan.connect(registeredUser).provideLoan(0);
   });
+  /*
+  it("Should payback and take the loan", async function() {
+    // parameters
+    const principal = utils.parseEther("1");
+    const repayment = utils.parseEther("1");
+    const duration = utils.parseEther("1");
+    const validUntil = utils.parseEther("1");
+
+    await floan.requestLoan(principal, repayment, duration, validUntil);
+
+    await token.approve(floan.address, utils.parseEther("1"));
+    await floan.provideLoan(0);
+
+    await token.approve(floan.address, utils.parseEther("1"));
+    await floan.paybackLoan(0);
+
+    await floan.takePayback(0);
+  });
+  */
 });

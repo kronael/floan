@@ -5,6 +5,11 @@ module.exports = [
         "internalType": "address",
         "name": "_tokenAddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_pohAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -99,12 +104,6 @@ module.exports = [
         "internalType": "uint256",
         "name": "duration",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "validUntil",
-        "type": "uint256"
       }
     ],
     "name": "LogRequestLoan",
@@ -113,6 +112,12 @@ module.exports = [
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "requestor",
+        "type": "address"
+      },
       {
         "indexed": true,
         "internalType": "uint256",
@@ -169,19 +174,6 @@ module.exports = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -220,7 +212,7 @@ module.exports = [
           },
           {
             "internalType": "uint48",
-            "name": "validUntil",
+            "name": "startBlock",
             "type": "uint48"
           },
           {
@@ -247,6 +239,19 @@ module.exports = [
         "internalType": "struct FloanTypes.credit",
         "name": "",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPOHAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -339,11 +344,6 @@ module.exports = [
       {
         "internalType": "uint256",
         "name": "_duration",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_validUntil",
         "type": "uint256"
       }
     ],

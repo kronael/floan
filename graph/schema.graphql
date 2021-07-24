@@ -1,6 +1,10 @@
 type RequestLoan @entity {
   id: ID!
-  loan: Loan!  
+  requester: Bytes!
+  principal: BigInt!
+  repayment: BigInt!
+  duration: BigInt!
+  validUntil: BigInt!
 }
 
 type RepayLoan @entity {
@@ -10,7 +14,7 @@ type RepayLoan @entity {
 
 type ProvideLoan @entity {
   id: ID!
-  provider: Provider!
+  provider: Bytes!
   loan: Loan!
 }
 
@@ -26,15 +30,9 @@ type PaybackLoan @entity {
 
 type Loan @entity {
   id: ID!
-  requester: Bytes!
-  principal: BigInt!
-  repayment: BigInt!
-  duration: BigInt!
-  validUntil: BigInt!
+  request: RequestLoan!
+  provision: ProvideLoan
+  draw: DrawLoan
+  repay: PaybackLoan
   state: String!
-}
-
-type Provider @entity {
-  id: ID!
-  loansFunded: [ProvideLoan!] @derivedFrom(field: "provider")
 }

@@ -8,7 +8,7 @@ library FloanTypes {
         uint256 principal;
         uint256 repayment;
         uint48 duration;
-        uint48 validUntil;
+        uint48 startBlock;
         bool isFilled;
         bool isWithdrawn;
         bool isPayedBack;

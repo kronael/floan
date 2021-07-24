@@ -13,8 +13,13 @@ const main = async () => {
   tokenAddress = utils.getAddress("0xff795577d9ac8bd7d90ee22b6c1703490b6512fd"); // dai
   token = await ethers.getContractAt("Token", tokenAddress);
 
+  const poh = await ethers.getContractAt(
+    "IProofOfHumanity",
+    utils.getAddress("0x73BCCE92806BCe146102C44c4D9c3b9b9D745794")
+  );
+
   //const floan = await deploy("Floan", [tokenAddress]);
-  const floan = await deploy("Floan", [token.address]);
+  const floan = await deploy("Floan", [token.address, poh.address]);
 
   console.log(
     " 💾  Artifacts (address, abi, and args) saved to: ",
