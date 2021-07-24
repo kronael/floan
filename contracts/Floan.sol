@@ -25,20 +25,23 @@ contract Floan is IFloan, Ownable {
     event LogPaybackLoan(address indexed requestor, uint256 indexed loanID);
     event LogSlashDebtor(uint256 indexed loanID);
 
-    constructor(address _tokenAddress) {
+    constructor(address _tokenAddress, address _pohAddress) {
         token = IERC20(_tokenAddress);
+        proofOfHumanity = IProofOfHumanity(_pohAddress);
     }
 
     /********************* states *********************/
     IERC20 public token;
-    IProofOfHumanity constant proofOfHumanity =
-        IProofOfHumanity(address(0x73BCCE92806BCe146102C44c4D9c3b9b9D745794));
+    IProofOfHumanity immutable proofOfHumanity;
     mapping(uint256 => FloanTypes.credit) credits;
     uint256 loanNum;
 
     /********************* modifiers *********************/
 
-    function setNewToken(address _newTokenAddress) public onlyOwner() {
+    function setNewToken(address _newTokenAddress, address _pohAddress)
+        public
+        onlyOwner()
+    {
         token = IERC20(_newTokenAddress);
     }
 
@@ -47,7 +50,7 @@ contract Floan is IFloan, Ownable {
         return proofOfHumanity.isRegistered(msg.sender);
     }
 
-    function getAddress() public pure returns (address) {
+    function getPOHAddress() public view returns (address) {
         return address(proofOfHumanity);
     }
 

@@ -20,4 +20,13 @@ const getToken = async () => {
   return token;
 };
 
-module.exports = { getContract, getToken };
+const getPOH = async () => {
+  // get contract
+  const POHAddress = utils.getAddress(
+    "0x73BCCE92806BCe146102C44c4D9c3b9b9D745794"
+  );
+  const poh = await ethers.getContractAt("IProofOfHumanity", POHAddress);
+  return poh;
+};
+
+module.exports = { getContract, getToken, getPOH };
