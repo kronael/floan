@@ -10,22 +10,8 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 
 contract Floan is IFloan {
     /********************* events *********************/
-    event LogRequestLoan(
-        address indexed requester,
-        uint256 indexed loanID,
-        uint256 principal,
-        uint256 repayment,
-        uint256 duration,
-        uint256 validUntil
-    );
-    event LogProvideLoan(
-        address indexed matcher,
-        uint256 indexed loanID,
-        uint256 principal,
-        uint256 repayment,
-        uint256 duration,
-        uint256 validUntil
-    );
+    event LogRequestLoan(address indexed requester, uint256 indexed loanID);
+    event LogProvideLoan(address indexed matcher, uint256 indexed loanID);
     event LogDrawLoan(address indexed requestor, uint256 indexed loanID);
     event LogPaybackLoan(address indexed requestor, uint256 indexed loanID);
     event LogSlashDebtor(uint256 indexed loanID);
@@ -72,14 +58,7 @@ contract Floan is IFloan {
         });
         debtors[msg.sender] = loanNum;
         // log action
-        emit LogRequestLoan(
-            msg.sender,
-            loanNum,
-            _principal,
-            _repayment,
-            _duration,
-            _validUntil
-        );
+        emit LogRequestLoan(msg.sender, loanNum);
         // update credit information
         loanNum += 1;
     }
@@ -93,14 +72,7 @@ contract Floan is IFloan {
         );
         credits[loanID].isFilled = true;
         creditors[msg.sender] = loanID;
-        emit LogProvideLoan(
-            msg.sender,
-            loanID,
-            credits[loanID].principal,
-            credits[loanID].repayment,
-            credits[loanID].duration,
-            credits[loanID].validUntil
-        );
+        emit LogProvideLoan(msg.sender, loanID);
     }
 
     function drawLoan() external override {
