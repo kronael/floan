@@ -7,10 +7,18 @@ import {console} from "hardhat/console.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Floan is IFloan {
+contract Floan is IFloan, Ownable {
     /********************* events *********************/
-    event LogRequestLoan(address indexed requester, uint256 indexed loanID);
+    event LogRequestLoan(
+        address indexed requester,
+        uint256 indexed loanID,
+        uint256 principal,
+        uint256 repayment,
+        uint256 duration,
+        uint256 validUntil
+    );
     event LogProvideLoan(address indexed matcher, uint256 indexed loanID);
     event LogDrawLoan(address indexed requestor, uint256 indexed loanID);
     event LogPaybackLoan(address indexed requestor, uint256 indexed loanID);
@@ -58,7 +66,14 @@ contract Floan is IFloan {
         });
         debtors[msg.sender] = loanNum;
         // log action
-        emit LogRequestLoan(msg.sender, loanNum);
+        emit LogRequestLoan(
+            msg.sender,
+            loanNum,
+            _principal,
+            _repayment,
+            _duration,
+            _validUntil
+        );
         // update credit information
         loanNum += 1;
     }

@@ -4,7 +4,6 @@ require("dotenv").config();
 
 // load tasks
 const normalizedPath = require("path").join(__dirname, "tasks");
-console.log("Paths are", normalizedPath);
 require("fs")
   .readdirSync(normalizedPath)
   .forEach(function (file) {
@@ -22,7 +21,7 @@ const etherscanAPI = process.env.ETHERSCAN_API;
  * @type import('hardhat/config').HardhatUserConfig
  */
 
-const DEFAULT_NETWORK = "hardhat";
+const DEFAULT_NETWORK = "kovan";
 module.exports = {
   defaultNetwork: DEFAULT_NETWORK,
   networks: {
