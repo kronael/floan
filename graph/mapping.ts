@@ -6,7 +6,6 @@ import {
 } from './generated/Floan/Floan'
 import {
   Loan,
-  Requester,
   Provider,
   RequestLoan,
   ProvideLoan,
@@ -17,22 +16,14 @@ import {
 export function handleLogRequestLoan(event: LogRequestLoan): void {
   let loan = new Loan(event.params.loanID.toString())
 
-  loan.id = event.params.loanID.toString()
-
-  let requester_id = event.params.requester.toString()
-  let requester = Requester.load(requester_id)
-  if(!requester)
-    requester = new Requester(requester_id)
-
+  loan.requester = event.params.requester
   loan.principal = event.params.principal
   loan.repayment = event.params.repayment
   loan.duration = event.params.duration
   loan.validUntil = event.params.validUntil
-
   loan.state = 'OPEN'
 
   loan.save()
-  requester.save()
 }
 
 export function handleLogProvideLoan(event: LogProvideLoan): void {

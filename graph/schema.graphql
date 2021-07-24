@@ -26,17 +26,12 @@ type PaybackLoan @entity {
 
 type Loan @entity {
   id: ID!
-  requester: Requester!
+  requester: Bytes!
   principal: BigInt!
   repayment: BigInt!
   duration: BigInt!
   validUntil: BigInt!
   state: String!
-}
-
-type Requester @entity {
-  id: ID!
-  loans: [Loan!] @derivedFrom(field: "requester")
 }
 
 type Provider @entity {
