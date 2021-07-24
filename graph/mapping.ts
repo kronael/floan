@@ -1,49 +1,41 @@
 import {
   LogRequestLoan,
   LogPaybackLoan,
-  LogMatchLoan,
-  LogWithdrawLoan,
+  LogProvideLoan,
+  LogDrawLoan,
 } from './generated/Floan/Floan'
 import {
   Loan,
-  Requester,
-  Matcher,
+  Provider,
   RequestLoan,
-  MatchLoan,
-  WithdrawLoan,
+  ProvideLoan,
+  DrawLoan,
   PaybackLoan,
 } from './generated/schema'
 
 export function handleLogRequestLoan(event: LogRequestLoan): void {
   let loan = new Loan(event.params.loanID.toString())
 
-  loan.id = event.params.loanID.toString()
-
-  let requester_id = event.params.requester.toString()
-  let requester = Requester.load(requester_id)
-  if(!requester)
-    requester = new Requester(requester_id)
-
+  loan.requester = event.params.requester
   loan.principal = event.params.principal
   loan.repayment = event.params.repayment
   loan.duration = event.params.duration
-
+  loan.validUntil = event.params.validUntil
   loan.state = 'OPEN'
 
   loan.save()
-  requester.save()
 }
 
-export function handleLogMatchLoan(event: LogMatchLoan): void {
+export function handleLogProvideLoan(event: LogProvideLoan): void {
   let id = event.params.loanID.toString()
   let loan = Loan.load(id)
 
-  loan.state = 'MATCHED'
+  loan.state = 'PROVIDED'
   
   loan.save()
 }
 
-export function handleLogWithdrawLoan(event: LogWithdrawLoan): void {
+export function handleLogDrawLoan(event: LogDrawLoan): void {
   let id = event.params.loanID.toString()
   let loan = Loan.load(id)
 

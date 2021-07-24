@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Floan
-    network: mumbai
+    network: kovan
     source:
-      address: '0xC01001E17E3f0bcDFe67e0b4bD02B0B13075EA82'
+      address: '0xa5b271Eb7dAed08eD76EDd794c13A6113B6aA2Cd'
       abi: Floan
-      startBlock: 16750000
+      startBlock: 26338000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -21,14 +21,12 @@ dataSources:
         - name: Floan
           file: ../artifacts/contracts/Floan.sol/Floan.json
       eventHandlers:
-        - event: LogMatchLoan(indexed address,indexed uint256,uint256,uint256,uint256)
-          handler: handleLogMatchLoan
-        - event: LogPaybackLoan(indexed address,indexed address)
-          handler: handleLogPaybackLoan
-        - event: LogRequestLoan(indexed address,indexed uint256,uint256,uint256,uint256)
+        - event: LogRequestLoan(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleLogRequestLoan
-        - event: LogSlashDebor(indexed address,indexed address,indexed address)
-          handler: handleLogSlashDebor
-        - event: LogWithdrawLoan(indexed address,indexed address)
-          handler: handleLogWithdrawLoan
+        - event: LogProvideLoan(indexed address,indexed uint256)
+          handler: handleLogMatchLoan
+        - event: LogDrawLoan(indexed address,indexed uint256)
+          handler: handleLogDrawLoan
+        - event: LogPaybackLoan(indexed address,indexed uint256)
+          handler: handleLogPaybackLoan
       file: ./mapping.ts

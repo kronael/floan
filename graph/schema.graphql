@@ -8,12 +8,13 @@ type RepayLoan @entity {
   loan: Loan!
 }
 
-type MatchLoan @entity {
+type ProvideLoan @entity {
   id: ID!
+  provider: Provider!
   loan: Loan!
 }
 
-type WithdrawLoan @entity {
+type DrawLoan @entity {
   id: ID!
   loan: Loan!
 }
@@ -25,25 +26,15 @@ type PaybackLoan @entity {
 
 type Loan @entity {
   id: ID!
-  requester: Requester!
+  requester: Bytes!
   principal: BigInt!
   repayment: BigInt!
   duration: BigInt!
+  validUntil: BigInt!
   state: String!
 }
 
-type Requester @entity {
+type Provider @entity {
   id: ID!
-  loans: [Loan!] @derivedFrom(field: "requester")
-}
-
-type Matcher @entity {
-  id: ID!
-  loansFunded: [LoanRequestMatch!] @derivedFrom(field: "matcher")
-}
-
-type LoanRequestMatch @entity {
-  id: ID!
-  request: RequestLoan!
-  matcher: Matcher!
+  loansFunded: [ProvideLoan!] @derivedFrom(field: "provider")
 }
