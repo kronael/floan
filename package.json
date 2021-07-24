@@ -2,6 +2,7 @@
   "license": "MIT",
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
+    "dotenv": "^10.0.0",
     "hardhat": "^2.5.0"
   },
   "devDependencies": {
@@ -12,21 +13,9 @@
     "ethers": "^5.0.0"
   },
   "scripts": {
-    "chain": "hardhat node",
-    "fork": "hardhat node --fork https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad",
-    "interface": "hardhat gen-interface",
     "test": "hardhat test --network hardhat",
     "compile": "hardhat compile",
-    "check": "hardhat check",
     "deploy": "hardhat run scripts/deploy.js",
-    "postdeploy": "hardhat run scripts/publish.js",
-    "verify": "hardhat verify",
-    "watch": "node scripts/watch.js",
-    "accounts": "hardhat accounts",
-    "balance": "hardhat balance",
-    "send": "hardhat send",
-    "generate": "hardhat generate",
-    "account": "hardhat account",
-    "coverage": "hardhat coverage"
+    "postdeploy": "hardhat run scripts/publish.js"
   }
 }

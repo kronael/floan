@@ -13,16 +13,19 @@ interface IFloan {
     ) external;
 
     /// @notice Accept loan offer
-    function matchLoan(uint256 loanId) external;
+    function provideLoan(uint256 loanId) external;
 
     /// @notice withdraw loaned amount
-    function withdrawLoan() external;
+    function drawLoan() external;
 
     /// @notice payback loan amount (with intererest)
     function paybackLoan(uint256 loanId) external;
 
     /// @notice slash debtor incase he defaults
     function slashDebtor(uint256 loanId) external;
+
+    /// @notice slash debtor incase he defaults
+    function takePayback(uint256 loanId) external;
 
     /********************* getter *********************/
 }

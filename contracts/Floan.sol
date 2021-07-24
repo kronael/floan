@@ -18,7 +18,7 @@ contract Floan is IFloan {
         uint256 duration,
         uint256 validUntil
     );
-    event LogMatchLoan(
+    event LogProvideLoan(
         address indexed matcher,
         uint256 indexed loanID,
         uint256 principal,
@@ -26,13 +26,9 @@ contract Floan is IFloan {
         uint256 duration,
         uint256 validUntil
     );
-    event LogWithdrawLoan(address indexed requestor, address indexed loanID);
-    event LogPaybackLoan(address indexed requestor, address indexed loanID);
-    event LogSlashDebor(
-        address indexed requestor,
-        address indexed matcher,
-        address indexed loanID
-    );
+    event LogDrawLoan(address indexed requestor, uint256 indexed loanID);
+    event LogPaybackLoan(address indexed requestor, uint256 indexed loanID);
+    event LogSlashDebtor(uint256 indexed loanID);
 
     constructor(address _tokenAddress) {
         token = IERC20(_tokenAddress);
@@ -40,7 +36,8 @@ contract Floan is IFloan {
 
     /********************* states *********************/
     IERC20 token;
-    mapping(address => uint256) creditIDs;
+    mapping(address => uint256) debtors;
+    mapping(address => uint256) creditors;
     mapping(uint256 => FloanTypes.credit) credits;
     uint256 loanNum;
 
@@ -69,9 +66,10 @@ contract Floan is IFloan {
             validUntil: _validUntil,
             isFilled: false,
             isWithdrawn: false,
-            isPayedBack: false
+            isPayedBack: false,
+            isClosed: false
         });
-        creditIDs[msg.sender] = loanNum;
+        debtors[msg.sender] = loanNum;
         // log action
         emit LogRequestLoan(
             msg.sender,
@@ -85,7 +83,7 @@ contract Floan is IFloan {
         loanNum += 1;
     }
 
-    function matchLoan(uint256 loanID) external override {
+    function provideLoan(uint256 loanID) external override {
         SafeERC20.safeTransferFrom(
             token,
             msg.sender,
@@ -93,16 +91,26 @@ contract Floan is IFloan {
             credits[loanID].principal
         );
         credits[loanID].isFilled = true;
+        creditors[msg.sender] = loanID;
+        emit LogProvideLoan(
+            msg.sender,
+            loanID,
+            credits[loanID].principal,
+            credits[loanID].repayment,
+            credits[loanID].duration,
+            credits[loanID].validUntil
+        );
     }
 
-    function withdrawLoan() external override {
-        uint256 loanID = creditIDs[msg.sender];
+    function drawLoan() external override {
+        uint256 loanID = debtors[msg.sender];
         FloanTypes.credit memory userCredit = credits[loanID];
         require(userCredit.isFilled, "Request not filled");
         require(!userCredit.isWithdrawn, "Money has been withdrawn");
 
         SafeERC20.safeTransfer(token, msg.sender, userCredit.principal);
         credits[loanID].isWithdrawn = true;
+        emit LogDrawLoan(msg.sender, loanID);
     }
 
     function paybackLoan(uint256 loanID) external override {
@@ -113,6 +121,19 @@ contract Floan is IFloan {
             credits[loanID].repayment
         );
         credits[loanID].isPayedBack = true;
+        emit LogPaybackLoan(msg.sender, loanID);
+    }
+
+    function takePayback(uint256 loanID) external override {
+        require(creditors[msg.sender] == loanID, "Not original lender");
+        require(credits[loanID].isPayedBack, "Not original lender");
+        SafeERC20.safeTransferFrom(
+            token,
+            msg.sender,
+            address(this),
+            credits[loanID].repayment
+        );
+        credits[loanID].isClosed = true;
     }
 
     function slashDebtor(uint256 loanID) external override {
@@ -122,5 +143,11 @@ contract Floan is IFloan {
             "Period is not over"
         );
         console.log("You are a bad boy");
+        emit LogSlashDebtor(loanID);
+    }
+
+    /********************* getter function *********************/
+    function getTokenAddress() public view returns (address) {
+        return address(token);
     }
 }

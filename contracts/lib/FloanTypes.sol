@@ -11,5 +11,6 @@ library FloanTypes {
         bool isFilled;
         bool isWithdrawn;
         bool isPayedBack;
+        bool isClosed;
     }
 }
