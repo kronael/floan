@@ -21,14 +21,12 @@ dataSources:
         - name: Floan
           file: ../artifacts/contracts/Floan.sol/Floan.json
       eventHandlers:
-        - event: LogMatchLoan(indexed address,indexed uint256,uint256,uint256,uint256)
-          handler: handleLogMatchLoan
-        - event: LogPaybackLoan(indexed address,indexed address)
-          handler: handleLogPaybackLoan
-        - event: LogRequestLoan(indexed address,indexed uint256,uint256,uint256,uint256)
+        - event: LogRequestLoan(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleLogRequestLoan
-        - event: LogSlashDebor(indexed address,indexed address,indexed address)
-          handler: handleLogSlashDebor
-        - event: LogWithdrawLoan(indexed address,indexed address)
-          handler: handleLogWithdrawLoan
+        - event: LogProvideLoan(indexed address,indexed uint256)
+          handler: handleLogMatchLoan
+        - event: LogDrawLoan(indexed address,indexed uint256)
+          handler: handleLogDrawLoan
+        - event: LogPaybackLoan(indexed address,indexed uint256)
+          handler: handleLogPaybackLoan
       file: ./mapping.ts
