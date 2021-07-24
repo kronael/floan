@@ -344,6 +344,19 @@ module.exports = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_newTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setNewToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "loanID",
         "type": "uint256"
@@ -365,6 +378,19 @@ module.exports = [
     "name": "takePayback",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "token",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

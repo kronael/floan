@@ -2,14 +2,13 @@
 require("@nomiclabs/hardhat-web3");
 
 const { utils } = require("ethers");
+const { getContract } = require("../helper/getContract");
 
 task("create-offer", "Creates an offer").setAction(async () => {
-  let floan;
   /************* DEPLOY CONTRACTS ******************/
 
   // get contract
-  floanAddress = utils.getAddress("0xa5b271Eb7dAed08eD76EDd794c13A6113B6aA2Cd");
-  floan = await ethers.getContractAt("Floan", floanAddress);
+  const floan = await getContract();
 
   // parameters
   const principal = utils.parseEther("1");

@@ -10,8 +10,8 @@ const main = async () => {
 
   /************* DEPLOY CONTRACTS ******************/
 
-  linkAddress = utils.getAddress("0x326c977e6efc84e512bb9c30f76e30c160ed06fb");
-  token = await ethers.getContractAt("Floan", linkAddress);
+  tokenAddress = utils.getAddress("0xff795577d9ac8bd7d90ee22b6c1703490b6512fd"); // dai
+  token = await ethers.getContractAt("Token", tokenAddress);
 
   //const floan = await deploy("Floan", [tokenAddress]);
   const floan = await deploy("Floan", [token.address]);
