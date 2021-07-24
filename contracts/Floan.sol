@@ -42,6 +42,15 @@ contract Floan is IFloan, Ownable {
         token = IERC20(_newTokenAddress);
     }
 
+    /********** return submissions  *****************/
+    function canUsePlattform() public view returns (bool) {
+        return proofOfHumanity.isRegistered(msg.sender);
+    }
+
+    function getAddress() public pure returns (address) {
+        return address(proofOfHumanity);
+    }
+
     /********************* function *********************/
 
     // core logic
@@ -52,6 +61,7 @@ contract Floan is IFloan, Ownable {
         uint256 _validUntil
     ) external override {
         require(_validUntil >= block.number, "Back in time call");
+        require(proofOfHumanity.isRegistered(msg.sender), "Must be registered");
         // add credit to orderbook
         credits[loanNum] = FloanTypes.credit({
             requester: msg.sender,

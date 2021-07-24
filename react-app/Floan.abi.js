@@ -144,9 +144,41 @@ module.exports = [
   },
   {
     "inputs": [],
+    "name": "canUsePlattform",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "loanID",
+        "type": "uint256"
+      }
+    ],
     "name": "drawLoan",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -167,6 +199,11 @@ module.exports = [
             "type": "address"
           },
           {
+            "internalType": "address",
+            "name": "lender",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "principal",
             "type": "uint256"
@@ -177,14 +214,14 @@ module.exports = [
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint48",
             "name": "duration",
-            "type": "uint256"
+            "type": "uint48"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint48",
             "name": "validUntil",
-            "type": "uint256"
+            "type": "uint48"
           },
           {
             "internalType": "bool",
@@ -210,32 +247,6 @@ module.exports = [
         "internalType": "struct FloanTypes.credit",
         "name": "",
         "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getCreditID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getDebtID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
