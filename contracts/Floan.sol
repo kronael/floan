@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import {FloanTypes} from "./lib/FloanTypes.sol";
 import {IFloan} from "./IFloan.sol";
+import {IProofOfHumanity} from "./ProofOfHumanity.sol";
 import {console} from "hardhat/console.sol";
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -30,17 +31,14 @@ contract Floan is IFloan, Ownable {
 
     /********************* states *********************/
     IERC20 public token;
+    IProofOfHumanity constant proofOfHumanity =
+        IProofOfHumanity(address(0x73BCCE92806BCe146102C44c4D9c3b9b9D745794));
     mapping(address => uint256) debtors;
     mapping(address => uint256) creditors;
     mapping(uint256 => FloanTypes.credit) credits;
     uint256 loanNum;
 
     /********************* modifiers *********************/
-
-    modifier isValid(uint256 validUntil) {
-        require(block.timestamp >= validUntil);
-        _;
-    }
 
     function setNewToken(address _newTokenAddress) public onlyOwner() {
         token = IERC20(_newTokenAddress);
@@ -83,6 +81,7 @@ contract Floan is IFloan, Ownable {
     }
 
     function provideLoan(uint256 loanID) external override {
+        require(credits[loanID].principal > 0, "Must be larger than 0");
         SafeERC20.safeTransferFrom(
             token,
             msg.sender,
@@ -119,12 +118,7 @@ contract Floan is IFloan, Ownable {
     function takePayback(uint256 loanID) external override {
         require(creditors[msg.sender] == loanID, "Not original lender");
         require(credits[loanID].isPayedBack, "Not original lender");
-        SafeERC20.safeTransferFrom(
-            token,
-            msg.sender,
-            address(this),
-            credits[loanID].repayment
-        );
+        SafeERC20.safeTransfer(token, msg.sender, credits[loanID].repayment);
         credits[loanID].isClosed = true;
     }
 

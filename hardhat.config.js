@@ -6,7 +6,7 @@ require("dotenv").config();
 const normalizedPath = require("path").join(__dirname, "tasks");
 require("fs")
   .readdirSync(normalizedPath)
-  .forEach(function (file) {
+  .forEach(function(file) {
     require("./tasks/" + file);
   });
 
@@ -68,5 +68,21 @@ module.exports = {
     cache: "./cache",
     artifacts: "./artifacts",
   },
-  solidity: "0.8.4",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.4",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+      {
+        version: "0.5.17",
+        settings: {},
+      },
+    ],
+  },
 };

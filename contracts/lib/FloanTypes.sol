@@ -4,10 +4,11 @@ pragma solidity ^0.8.0;
 library FloanTypes {
     struct credit {
         address requester;
+        address lender;
         uint256 principal;
         uint256 repayment;
-        uint256 duration;
-        uint256 validUntil;
+        uint48 duration;
+        uint48 validUntil;
         bool isFilled;
         bool isWithdrawn;
         bool isPayedBack;
