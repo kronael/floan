@@ -29,7 +29,7 @@ contract Floan is IFloan, Ownable {
     }
 
     /********************* states *********************/
-    IERC20 immutable token;
+    IERC20 public token;
     mapping(address => uint256) debtors;
     mapping(address => uint256) creditors;
     mapping(uint256 => FloanTypes.credit) credits;
@@ -40,6 +40,10 @@ contract Floan is IFloan, Ownable {
     modifier isValid(uint256 validUntil) {
         require(block.timestamp >= validUntil);
         _;
+    }
+
+    function setNewToken(address _newTokenAddress) public onlyOwner() {
+        token = IERC20(_newTokenAddress);
     }
 
     /********************* function *********************/
