@@ -33,8 +33,6 @@ contract Floan is IFloan, Ownable {
     IERC20 public token;
     IProofOfHumanity constant proofOfHumanity =
         IProofOfHumanity(address(0x73BCCE92806BCe146102C44c4D9c3b9b9D745794));
-    mapping(address => uint256) debtors;
-    mapping(address => uint256) creditors;
     mapping(uint256 => FloanTypes.credit) credits;
     uint256 loanNum;
 
@@ -57,16 +55,16 @@ contract Floan is IFloan, Ownable {
         // add credit to orderbook
         credits[loanNum] = FloanTypes.credit({
             requester: msg.sender,
+            lender: address(0),
             principal: _principal,
             repayment: _repayment,
-            duration: _duration,
-            validUntil: _validUntil,
+            duration: uint48(_duration),
+            validUntil: uint48(_validUntil),
             isFilled: false,
             isWithdrawn: false,
             isPayedBack: false,
             isClosed: false
         });
-        debtors[msg.sender] = loanNum;
         // log action
         emit LogRequestLoan(
             msg.sender,
@@ -89,12 +87,11 @@ contract Floan is IFloan, Ownable {
             credits[loanID].principal
         );
         credits[loanID].isFilled = true;
-        creditors[msg.sender] = loanID;
+        credits[loanID].lender = msg.sender;
         emit LogProvideLoan(msg.sender, loanID);
     }
 
-    function drawLoan() external override {
-        uint256 loanID = debtors[msg.sender];
+    function drawLoan(uint256 loanID) external override {
         FloanTypes.credit memory userCredit = credits[loanID];
         require(userCredit.isFilled, "Request not filled");
         require(!userCredit.isWithdrawn, "Money has been withdrawn");
@@ -116,16 +113,16 @@ contract Floan is IFloan, Ownable {
     }
 
     function takePayback(uint256 loanID) external override {
-        require(creditors[msg.sender] == loanID, "Not original lender");
-        require(credits[loanID].isPayedBack, "Not original lender");
+        require(credits[loanID].lender == msg.sender, "Not original lender.");
+        require(credits[loanID].isPayedBack, "Not paid back");
         SafeERC20.safeTransfer(token, msg.sender, credits[loanID].repayment);
         credits[loanID].isClosed = true;
     }
 
     function slashDebtor(uint256 loanID) external override {
-        require(credits[loanID].isPayedBack = false, "Is payed back");
+        require(credits[loanID].isPayedBack == false, "Is payed back");
         require(
-            credits[loanID].validUntil <= block.number,
+            uint256(credits[loanID].validUntil) <= block.number,
             "Period is not over"
         );
         console.log("You are a bad boy");
@@ -137,13 +134,13 @@ contract Floan is IFloan, Ownable {
         return address(token);
     }
 
-    function getDebtID() public view returns (uint256) {
+    /**function getDebtID() public view returns (uint256) {
         return debtors[msg.sender];
     }
 
     function getCreditID() public view returns (uint256) {
         return creditors[msg.sender];
-    }
+    }**/
 
     function getCredit(uint256 _loanId)
         public
