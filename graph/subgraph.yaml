@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Floan
-    network: mumbai
+    network: kovan
     source:
-      address: '0xC01001E17E3f0bcDFe67e0b4bD02B0B13075EA82'
+      address: '0xa5b271Eb7dAed08eD76EDd794c13A6113B6aA2Cd'
       abi: Floan
-      startBlock: 16750000
+      startBlock: 26338000
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
