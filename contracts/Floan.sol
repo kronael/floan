@@ -129,7 +129,7 @@ contract Floan is IFloan, Ownable {
     }
 
     function slashDebtor(uint256 loanID) external override {
-        require(credits[loanID].isPayedBack = false, "Is payed back");
+        require(credits[loanID].isPayedBack == false, "Is payed back");
         require(
             credits[loanID].validUntil <= block.number,
             "Period is not over"
