@@ -4,14 +4,11 @@ require("@nomiclabs/hardhat-web3");
 const { utils } = require("ethers");
 const { getContract, getToken } = require("../helper/getContract");
 
-task("payback-loan", "Payback loan")
+task("take-payback", "Take payback")
   .addParam("loanid", "The Id of the loan")
   .setAction(async (taskArgs) => {
     const floan = await getContract();
-    const token = await getToken();
-
-    await token.approve(floan.address, utils.parseEther("1"));
-    await floan.paybackLoan(taskArgs.loanid);
+    await floan.takePayback(taskArgs.loanid);
   });
 
 module.exports = {};
