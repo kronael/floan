@@ -16,7 +16,7 @@ interface IFloan {
     function provideLoan(uint256 loanId) external;
 
     /// @notice withdraw loaned amount
-    function drawLoan() external;
+    function drawLoan(uint256 loanId) external;
 
     /// @notice payback loan amount (with intererest)
     function paybackLoan(uint256 loanId) external;
