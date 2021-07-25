@@ -8,7 +8,7 @@ dataSources:
     name: Floan
     network: kovan
     source:
-      address: '0x55f7Be297800584d9311341EDfB19788407AB72f'
+      address: '0x01fb8eAb7799f0c046fa55dDe8e1849B505285ad'
       abi: Floan
       startBlock: 26338000
     mapping:
