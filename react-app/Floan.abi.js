@@ -216,24 +216,9 @@ module.exports = [
             "type": "uint48"
           },
           {
-            "internalType": "bool",
-            "name": "isFilled",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isWithdrawn",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isPayedBack",
-            "type": "bool"
-          },
-          {
-            "internalType": "bool",
-            "name": "isClosed",
-            "type": "bool"
+            "internalType": "enum FloanTypes.State",
+            "name": "state",
+            "type": "uint8"
           }
         ],
         "internalType": "struct FloanTypes.credit",

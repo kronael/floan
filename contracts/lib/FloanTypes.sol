@@ -2,6 +2,14 @@
 pragma solidity ^0.8.0;
 
 library FloanTypes {
+    enum State {
+        open,
+        filled,
+        withdrawn,
+        payedBack,
+        closed
+    }
+
     struct credit {
         address requester;
         address lender;
@@ -9,9 +17,6 @@ library FloanTypes {
         uint256 repayment;
         uint48 duration;
         uint48 startBlock;
-        bool isFilled;
-        bool isWithdrawn;
-        bool isPayedBack;
-        bool isClosed;
+        State state;
     }
 }

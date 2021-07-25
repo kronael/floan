@@ -68,10 +68,7 @@ contract Floan is IFloan, Ownable {
             repayment: _repayment,
             duration: uint48(_duration),
             startBlock: 0,
-            isFilled: false,
-            isWithdrawn: false,
-            isPayedBack: false,
-            isClosed: false
+            state: FloanTypes.State.open
         });
         // log action
         emit LogRequestLoan(
@@ -93,18 +90,20 @@ contract Floan is IFloan, Ownable {
             address(this),
             credits[loanID].principal
         );
-        credits[loanID].isFilled = true;
+        credits[loanID].state = FloanTypes.State.filled;
         credits[loanID].lender = msg.sender;
         emit LogProvideLoan(msg.sender, loanID);
     }
 
     function drawLoan(uint256 loanID) external override {
         FloanTypes.credit memory userCredit = credits[loanID];
-        require(userCredit.isFilled, "Request not filled");
-        require(!userCredit.isWithdrawn, "Money has been withdrawn");
+        require(
+            userCredit.state == FloanTypes.State.filled,
+            "Request not filled"
+        );
 
         SafeERC20.safeTransfer(token, msg.sender, userCredit.principal);
-        credits[loanID].isWithdrawn = true;
+        credits[loanID].state = FloanTypes.State.withdrawn;
         credits[loanID].startBlock = uint48(block.number);
         emit LogDrawLoan(msg.sender, loanID);
     }
@@ -116,19 +115,25 @@ contract Floan is IFloan, Ownable {
             address(this),
             credits[loanID].repayment
         );
-        credits[loanID].isPayedBack = true;
+        credits[loanID].state = FloanTypes.State.payedBack;
         emit LogPaybackLoan(msg.sender, loanID);
     }
 
     function takePayback(uint256 loanID) external override {
         require(credits[loanID].lender == msg.sender, "Not original lender.");
-        require(credits[loanID].isPayedBack, "Not paid back");
+        require(
+            credits[loanID].state == FloanTypes.State.payedBack,
+            "Not paid back"
+        );
         SafeERC20.safeTransfer(token, msg.sender, credits[loanID].repayment);
-        credits[loanID].isClosed = true;
+        credits[loanID].state = FloanTypes.State.closed;
     }
 
     function slashDebtor(uint256 loanID) external override {
-        require(credits[loanID].isPayedBack == false, "Is payed back");
+        require(
+            credits[loanID].state == FloanTypes.State.withdrawn,
+            "Is payed back"
+        );
         require(
             credits[loanID].startBlock + credits[loanID].duration <
                 uint48(block.number),
