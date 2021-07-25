@@ -4,7 +4,7 @@ const { utils } = require("ethers");
 const getContract = async () => {
   // get contract
   const floanAddress = utils.getAddress(
-    "0xeC77e7b8e2879dCC8E7e30cC3c86F9a06C99FE0F"
+    "0xAF2A62634f1021f36559CC0a3e0767E06488e9e7"
   );
   const floan = await ethers.getContractAt("Floan", floanAddress);
   //console.log(floan);

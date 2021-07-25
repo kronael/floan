@@ -59,7 +59,10 @@ contract Floan is IFloan, Ownable {
         uint256 _duration
     ) external override {
         require(_duration > 0, "Back in time call");
-        //require(proofOfHumanity.isRegistered(msg.sender), "Must be registered");
+        require(
+            proofOfHumanity.isRegistered(msg.sender),
+            "Must be registered on ProofOfHumanity"
+        );
         // add credit to orderbook
         credits[loanNum] = FloanTypes.credit({
             requester: msg.sender,
