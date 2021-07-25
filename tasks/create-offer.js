@@ -17,12 +17,12 @@ task("create-offer", "Creates an offer").setAction(async () => {
   const duration = utils.parseEther("1");
   const validUntil = utils.parseEther("1");
 
-  const pohAddress = await floan.getAddress();
+  const pohAddress = await floan.getPOHAddress();
   console.log("pohAddress is ", pohAddress);
 
   const canRequestLoan = await floan.canUsePlattform();
   console.log("canRequestLoan is ", canRequestLoan);
-  await floan.requestLoan(principal, repayment, duration, validUntil);
+  await floan.requestLoan(principal, repayment, duration);
 });
 
 module.exports = {};
