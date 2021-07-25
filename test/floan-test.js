@@ -8,7 +8,7 @@ const {
 describe("Should set up contract", function() {
   let floan, token, registeredUser;
   beforeEach("Set up", async () => {
-    const accounts = await hre.ethers.getSigners();
+    [owner, bob, alice, ...addrs] = await ethers.getSigners();
 
     const poh = await ethers.getContractAt(
       "IProofOfHumanity",
@@ -33,6 +33,12 @@ describe("Should set up contract", function() {
       token,
       "0x05E793cE0C6027323Ac150F6d45C2344d28B6019"
     );
+    await stealTokens(
+      owner,
+      utils.parseEther("100"),
+      token,
+      "0x05E793cE0C6027323Ac150F6d45C2344d28B6019"
+    );
   });
   it("Should give the correct token address to contract", async function() {
     expect(await floan.getTokenAddress()).to.be.equal(token.address);
@@ -45,6 +51,7 @@ describe("Should set up contract", function() {
   it("Should request a loan", async function() {
     const hasAccount = await floan.connect(registeredUser).canUsePlattform();
     console.log("hasAccount is", hasAccount.toString());
+    const [owner, user1, user2, ...other] = await hre.ethers.getSigners();
     // parameters
     const principal = utils.parseEther("1");
     const repayment = utils.parseEther("1");
@@ -53,6 +60,9 @@ describe("Should set up contract", function() {
     await floan
       .connect(registeredUser)
       .requestLoan(principal, repayment, duration);
+
+    const userCredit = await floan.getCredit(0);
+    console.log("userCredit is", userCredit.toString()[0]);
   });
   it("Should provide the loan", async function() {
     // parameters
