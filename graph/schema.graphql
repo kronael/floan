@@ -1,6 +1,6 @@
 type RequestLoan @entity {
   id: ID!
-  requester: Bytes!
+  requester: Requester!
   principal: BigInt!
   repayment: BigInt!
   duration: BigInt!
@@ -34,4 +34,11 @@ type Loan @entity {
   draw: DrawLoan
   repay: PaybackLoan
   state: String!
+}
+
+type Requester @entity {
+  id: ID!
+  amountRequested: BigInt!
+  amountOutstanding: BigInt!
+  amountRepayed: BigInt!
 }

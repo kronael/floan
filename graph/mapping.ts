@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts'
 import {
   LogRequestLoan,
   LogPaybackLoan,
@@ -6,6 +7,7 @@ import {
 } from './generated/Floan/Floan'
 import {
   Loan,
+  Requester,
   RequestLoan,
   ProvideLoan,
   PaybackLoan,
@@ -14,14 +16,28 @@ import {
 
 export function handleLogRequestLoan(event: LogRequestLoan): void {
   let id = event.params.loanID.toString()
-  let ev = new RequestLoan(id)
+  let request = new RequestLoan(id)
 
-  ev.requester = event.params.requester
-  ev.principal = event.params.principal
-  ev.repayment = event.params.repayment
-  ev.duration = event.params.duration
+  let requester_id = event.params.requester.toHex()
 
-  ev.save()
+  let requester = Requester.load(requester_id)
+  if(!requester){
+    requester = new Requester(requester_id)
+    requester.amountRequested = new BigInt(0)
+    requester.amountOutstanding = new BigInt(0)
+    requester.amountRepayed = new BigInt(0)
+  }
+
+  request.requester = requester_id
+  request.principal = event.params.principal
+  request.repayment = event.params.repayment
+  request.duration = event.params.duration
+
+  request.save()
+
+  requester.amountRequested += request.principal
+
+  requester.save()
 
   let loan = new Loan(id)
 
@@ -37,6 +53,14 @@ export function handleLogProvideLoan(event: LogProvideLoan): void {
   if(!loan)
     return
     
+  let request = RequestLoan.load(loan.request)
+  if(!request)
+    return
+
+  let requester = Requester.load(request.requester)
+  if(!requester)
+    return
+
   let ev = new ProvideLoan(id)
 
   ev.loan = id
@@ -48,6 +72,8 @@ export function handleLogProvideLoan(event: LogProvideLoan): void {
   loan.state = 'PROVIDED'
 
   loan.save()
+
+  requester.amountOutstanding += request.principal
 }
 
 export function handleLogDrawLoan(event: LogDrawLoan): void {
@@ -73,6 +99,14 @@ export function handleLogPaybackLoan(event: LogPaybackLoan): void {
   if(!loan)
     return
 
+  let request = RequestLoan.load(loan.request)
+  if(!request)
+    return
+
+  let requester = Requester.load(request.requester)
+  if(!requester)
+    return
+
   let ev = new PaybackLoan(id)
   ev.loan = id
 
@@ -82,4 +116,6 @@ export function handleLogPaybackLoan(event: LogPaybackLoan): void {
   loan.state = 'REPAYED'
 
   loan.save()
+
+  requester.amountRepayed += request.repayment
 }
