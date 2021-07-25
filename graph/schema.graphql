@@ -1,5 +1,7 @@
 type RequestLoan @entity {
   id: ID!
+  block: Int!
+  timestamp: Int!
   requester: Requester!
   principal: BigInt!
   repayment: BigInt!
@@ -13,6 +15,8 @@ type RepayLoan @entity {
 
 type ProvideLoan @entity {
   id: ID!
+  block: Int!
+  timestamp: Int!
   provider: Bytes!
   loan: Loan!
 }

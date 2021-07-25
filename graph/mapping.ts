@@ -29,6 +29,8 @@ export function handleLogRequestLoan(event: LogRequestLoan): void {
   }
 
   request.requester = requester_id
+  request.block = event.block.number.toI32()
+  request.timestamp = event.block.timestamp.toI32()
   request.principal = event.params.principal
   request.repayment = event.params.repayment
   request.duration = event.params.duration
@@ -65,6 +67,8 @@ export function handleLogProvideLoan(event: LogProvideLoan): void {
 
   ev.loan = id
   ev.provider = event.params.matcher
+  ev.timestamp = event.block.timestamp.toI32()
+  ev.block = event.block.number.toI32()
 
   ev.save()
 
