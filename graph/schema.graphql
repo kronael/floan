@@ -4,7 +4,6 @@ type RequestLoan @entity {
   principal: BigInt!
   repayment: BigInt!
   duration: BigInt!
-  validUntil: BigInt!
 }
 
 type RepayLoan @entity {

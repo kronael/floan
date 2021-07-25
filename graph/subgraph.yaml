@@ -8,7 +8,7 @@ dataSources:
     name: Floan
     network: kovan
     source:
-      address: '0x01fb8eAb7799f0c046fa55dDe8e1849B505285ad'
+      address: '0xAF2A62634f1021f36559CC0a3e0767E06488e9e7'
       abi: Floan
       startBlock: 26338000
     mapping:
@@ -21,7 +21,7 @@ dataSources:
         - name: Floan
           file: ../artifacts/contracts/Floan.sol/Floan.json
       eventHandlers:
-        - event: LogRequestLoan(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+        - event: LogRequestLoan(indexed address,indexed uint256,uint256,uint256,uint256)
           handler: handleLogRequestLoan
         - event: LogProvideLoan(indexed address,indexed uint256)
           handler: handleLogProvideLoan

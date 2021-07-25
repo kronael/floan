@@ -20,7 +20,6 @@ export function handleLogRequestLoan(event: LogRequestLoan): void {
   ev.principal = event.params.principal
   ev.repayment = event.params.repayment
   ev.duration = event.params.duration
-  ev.validUntil = event.params.validUntil
 
   ev.save()
 
